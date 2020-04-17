@@ -1,11 +1,17 @@
 use_frameworks!
 
+platform :ios, '13.0'
+
+source 'git@github.com:EOSLaoMao/laomao-pods.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
 target 'EOSWallet_Example' do
   pod 'EOSWallet', :path => '../'
 
   target 'EOSWallet_Tests' do
     inherit! :search_paths
-
+    
+    pod 'EosioSwift'
     
   end
 end

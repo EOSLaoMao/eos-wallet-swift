@@ -1,0 +1,40 @@
+PODS:
+  - BigInt (5.0.0)
+  - EosioSwift (0.2.1):
+    - BigInt (~> 5.0)
+    - PromiseKit (~> 6.8)
+  - EOSWallet (0.1.0)
+  - PromiseKit (6.13.1):
+    - PromiseKit/CorePromise (= 6.13.1)
+    - PromiseKit/Foundation (= 6.13.1)
+    - PromiseKit/UIKit (= 6.13.1)
+  - PromiseKit/CorePromise (6.13.1)
+  - PromiseKit/Foundation (6.13.1):
+    - PromiseKit/CorePromise
+  - PromiseKit/UIKit (6.13.1):
+    - PromiseKit/CorePromise
+
+DEPENDENCIES:
+  - EosioSwift
+  - EOSWallet (from `../`)
+
+SPEC REPOS:
+  "git@github.com:EOSLaoMao/laomao-pods.git":
+    - EosioSwift
+  https://github.com/CocoaPods/Specs.git:
+    - BigInt
+    - PromiseKit
+
+EXTERNAL SOURCES:
+  EOSWallet:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BigInt: 74b4d88367b0e819d9f77393549226d36faeb0d8
+  EosioSwift: 8724601e01cf997f1b072146c721dad06ae6361a
+  EOSWallet: 3ea2a6b47ad0bc6db86e484c823fcd530a7c1a96
+  PromiseKit: 28fda91c973cc377875d8c0ea4f973013c05b6db
+
+PODFILE CHECKSUM: 344706fbc3b34c8b915b2e65d32b041f094f31c2
+
+COCOAPODS: 1.8.4
