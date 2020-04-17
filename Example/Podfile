@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'EOSWallet_Example' do
+  pod 'EOSWallet', :path => '../'
+
+  target 'EOSWallet_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
