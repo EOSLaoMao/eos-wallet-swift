@@ -11,4 +11,5 @@ enum WalletError: Error {
     case invalidCipher
     case invalidPassword
     case decryptFailed
+    case unsupportCurve
 }
