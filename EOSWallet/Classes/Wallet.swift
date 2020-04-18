@@ -10,6 +10,8 @@ import CommonCrypto
 
 let kCheckSumLen = 64
 let kCurveLen = 1
+let kPublicKeyLen = 33
+let kPrivateKeyLen = 32
 let kKeyCountLen = 1
 let kDecryptKeyLen = 32
 let kAESBlockSize = 16
@@ -74,11 +76,25 @@ public class Wallet {
         let count = decrypted.subdata(in: Range(index..<index+kKeyCountLen)).first!
         index += kKeyCountLen
 
+        var keys = Keys()
         for _ in 0..<count {
-            let curve = try Curve(byte: decrypted.subdata(in: Range(index..<index+kCurveLen)).first!)
+            let publicCurveByte = decrypted.subdata(in: Range(index..<index+kCurveLen)).first!
+            let publicCurve = try Curve(byte: publicCurveByte)
+            index += kCurveLen
             
+            let publicBytes = decrypted.subdata(in: Range(index..<index+kPublicKeyLen))
+            index += kPublicKeyLen
+            
+            let privateCurveByte = decrypted.subdata(in: Range(index..<index+kCurveLen)).first!
+            let privateCurve = try Curve(byte: privateCurveByte)
+            index += kCurveLen
+            
+            let privateBytes = decrypted.subdata(in: Range(index..<index+kPrivateKeyLen))
+            index += kPrivateKeyLen
+            
+            keys.append((PublicKey(curve: publicCurve, bytes: publicBytes), PrivateKey(curve: privateCurve, bytes: privateBytes)))
         }
         
-        return []
+        return keys
     }
 }
