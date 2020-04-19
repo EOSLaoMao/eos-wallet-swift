@@ -3,7 +3,6 @@
 [![CI Status](https://img.shields.io/travis/iCell/EOSWallet.svg?style=flat)](https://travis-ci.org/iCell/EOSWallet)
 [![Version](https://img.shields.io/cocoapods/v/EOSWallet.svg?style=flat)](https://cocoapods.org/pods/EOSWallet)
 [![License](https://img.shields.io/cocoapods/l/EOSWallet.svg?style=flat)](https://cocoapods.org/pods/EOSWallet)
-[![Platform](https://img.shields.io/cocoapods/p/EOSWallet.svg?style=flat)](https://cocoapods.org/pods/EOSWallet)
 
 ## Example
 

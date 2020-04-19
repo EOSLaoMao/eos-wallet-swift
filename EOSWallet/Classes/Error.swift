@@ -7,9 +7,22 @@
 
 import Foundation
 
-enum WalletError: Error {
+public enum WalletError: Error {
     case invalidCipher
     case invalidPassword
     case decryptFailed
     case unsupportCurve
+    
+    public var localizedDescription: String {
+        switch self {
+        case .invalidCipher:
+            return "invalid cipher text"
+        case .invalidPassword:
+            return "invalid unlock password"
+        case .decryptFailed:
+            return "decrypt failed"
+        case .unsupportCurve:
+            return "unsupport curve"
+        }
+    }
 }

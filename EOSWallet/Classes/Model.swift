@@ -7,6 +7,16 @@
 
 import Foundation
 
+public typealias Byte = UInt8
+
+struct Const {
+    static let checkSumLen = 64
+    static let publicKeyLen = 33
+    static let privateKeyLen = 32
+    static let decryptKeyLen = 32
+    static let aesBlockSize = 16
+}
+
 public enum Curve {
     case k1
     case r1
@@ -32,19 +42,30 @@ public enum Curve {
             }
         }
     }
+    
+    var byte: Byte {
+        get {
+            switch self {
+            case .k1:
+                return Byte(0)
+            case .r1:
+                return Byte(1)
+            }
+        }
+    }
 }
 
 public struct PublicKey {
-    let curve: Curve
-    let bytes: Data
+    public let curve: Curve
+    public let bytes: Data
 }
 
 public struct PrivateKey {
-    let curve: Curve
-    let bytes: Data
+    public let curve: Curve
+    public let bytes: Data
 }
 
 public struct DecodedWallet {
-    let checksum: Data
-    let keys: [(pub: PublicKey, pri: PrivateKey)]
+    public let checksum: Data
+    public let keys: [(pub: PublicKey, pri: PrivateKey)]
 }

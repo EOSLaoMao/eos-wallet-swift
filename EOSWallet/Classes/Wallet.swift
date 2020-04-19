@@ -8,17 +8,6 @@
 import Foundation
 import CommonCrypto
 
-let kCheckSumLen = 64
-let kCurveLen = 1
-let kPublicKeyLen = 33
-let kPrivateKeyLen = 32
-let kKeyCountLen = 1
-let kDecryptKeyLen = 32
-let kAESBlockSize = 16
-
-public typealias Byte = UInt8
-public typealias Bytes = [UInt8]
-
 public typealias Keys = [(pub: PublicKey, pri: PrivateKey)]
 
 public class Wallet {
@@ -41,14 +30,14 @@ public class Wallet {
         }
         
         let hashedPassword = passwordData.sha512()
-        guard hashedPassword.count == kCheckSumLen else {
+        guard hashedPassword.count == Const.checkSumLen else {
             throw WalletError.invalidPassword
         }
         
         checksum = hashedPassword
         
-        let key = hashedPassword.subdata(in: Range(0..<kDecryptKeyLen))
-        let iv = hashedPassword.subdata(in: Range(kDecryptKeyLen..<kDecryptKeyLen+kAESBlockSize))
+        let key = hashedPassword.subdata(in: Range(0..<Const.decryptKeyLen))
+        let iv = hashedPassword.subdata(in: Range(Const.decryptKeyLen..<Const.decryptKeyLen+Const.aesBlockSize))
 
         let decrypted = AESCBCDecrypt(data: cipher, key: key, iv: iv)
         guard let decryptedData = decrypted else {
@@ -58,41 +47,35 @@ public class Wallet {
         return try decodeKeys(from: decryptedData)
     }
     
-    func decodeKeys(from decrypted: Data) throws -> Keys {
-        var index = 0
+    private func decodeKeys(from decrypted: Data) throws -> Keys {
+        let reader = BytesReader(data: decrypted)
         
-        guard decrypted.count >= kCheckSumLen else {
-            throw WalletError.decryptFailed
-        }
-        let checksum = decrypted.subdata(in: Range(index..<index+kCheckSumLen))
-        index += kCheckSumLen
+        let checksum = try reader.getBytes(len: Const.checkSumLen)
         guard self.checksum != nil && checksum == self.checksum else {
             throw WalletError.decryptFailed
         }
         
-        guard decrypted.count >= index + kKeyCountLen else {
-            throw WalletError.invalidCipher
-        }
-        let count = decrypted.subdata(in: Range(index..<index+kKeyCountLen)).first!
-        index += kKeyCountLen
+        let count = try reader.getByte()
 
         var keys = Keys()
         for _ in 0..<count {
-            let publicCurveByte = decrypted.subdata(in: Range(index..<index+kCurveLen)).first!
-            let publicCurve = try Curve(byte: publicCurveByte)
-            index += kCurveLen
+            let publicCurve = try Curve(byte: reader.getByte())
+            let publicContent = try reader.getBytes(len: Const.publicKeyLen)
             
-            let publicBytes = decrypted.subdata(in: Range(index..<index+kPublicKeyLen))
-            index += kPublicKeyLen
+            let privateCurve = try Curve(byte: reader.getByte())
+            let privateContent = try reader.getBytes(len: Const.privateKeyLen)
             
-            let privateCurveByte = decrypted.subdata(in: Range(index..<index+kCurveLen)).first!
-            let privateCurve = try Curve(byte: privateCurveByte)
-            index += kCurveLen
-            
-            let privateBytes = decrypted.subdata(in: Range(index..<index+kPrivateKeyLen))
-            index += kPrivateKeyLen
-            
-            keys.append((PublicKey(curve: publicCurve, bytes: publicBytes), PrivateKey(curve: privateCurve, bytes: privateBytes)))
+            let keyPair = (
+                PublicKey(
+                    curve: publicCurve,
+                    bytes: publicContent
+                ),
+                PrivateKey(
+                    curve: privateCurve,
+                    bytes: privateContent
+                )
+            )
+            keys.append(keyPair)
         }
         
         return keys
