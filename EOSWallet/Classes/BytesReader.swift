@@ -19,14 +19,14 @@ class BytesReader {
     func getByte() throws -> Byte {
         let step = 1
         try checkOutbounds(step)
-        let result = data.subdata(in: Range(index..<index+1)).first!
+        let result = data.subdata(in: index..<index+1).first!
         stepIndex(step: step)
         return result
     }
     
     func getBytes(len: Int) throws -> Data {
         try checkOutbounds(len)
-        let result = data.subdata(in: Range(index..<index+len))
+        let result = data.subdata(in: index..<index+len)
         stepIndex(step: len)
         return result
     }

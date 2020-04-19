@@ -36,8 +36,8 @@ public class Wallet {
         
         checksum = hashedPassword
         
-        let key = hashedPassword.subdata(in: Range(0..<Const.decryptKeyLen))
-        let iv = hashedPassword.subdata(in: Range(Const.decryptKeyLen..<Const.decryptKeyLen+Const.aesBlockSize))
+        let key = hashedPassword.subdata(in: 0..<Const.decryptKeyLen)
+        let iv = hashedPassword.subdata(in: Const.decryptKeyLen..<Const.decryptKeyLen+Const.aesBlockSize)
 
         let decrypted = AESCBCDecrypt(data: cipher, key: key, iv: iv)
         guard let decryptedData = decrypted else {
