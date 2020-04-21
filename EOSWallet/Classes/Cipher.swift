@@ -51,6 +51,6 @@ extension Data {
     func sha512() -> Data {
         let digest = SHA512.hash(data: self)
         let bytes = [Byte](digest.makeIterator())
-        return Data(bytes: bytes)
+        return Data(bytes)
     }
 }
